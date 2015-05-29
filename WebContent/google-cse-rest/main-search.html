@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Search the Site</title>
+<meta name="description" content="Search the Site">
+<link rel="stylesheet" type="text/css" href="../css/styles.css" >
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.0/themes/ui-lightness/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="../css/autocomplete.css">
+<style type="text/css">
+a.cblog:before {
+	content: url(pix/blog.png);
+}
+a.ctravel:before {
+	content: url(pix/travel.png);
+}
+a.ctech:before {
+	content: url(pix/tech.png);
+}
+a.cmisc:before {
+	content: url(pix/misc.png);
+}
+.padded {
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+.output {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url('../img/loader1.gif') 50% 50% no-repeat rgb(249,249,249);
+}
+#searchResult {
+	float: left;
+	width: 100%;
+	color: #444;
+	font-weight: bold;
+	margin: 10px 0 20px 0;
+	display: none;
+}
+#notFound {
+/* display:none; */
+}
+#correctedQuery {
+}
+#refinements {
+	margin: 12px 0 12px 0;
+	height: 29px;
+	/*   border-bottom: 1px solid #CCC; */
+	font-size: 12px;
+	font-weight: bold;
+	clear: both;
+	display: none;
+	width: 100%;
+}
+#refinements ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	display: table;
+	height: 100%;
+}
+#refinements ul li {
+	list-style: none;
+	display: table-cell;
+	text-align: center;
+	width: 260px;
+	vertical-align: middle;
+	background-color: #EFECDB;
+	height: 100%;
+}
+#refinements ul li a {
+	text-decoration: none;
+	color: #6A6666;
+	display: block;
+}
+#txtSearchTerm {
+	height: 25px;
+	font-size: 22px;
+	padding: 5px;
+}
+#btnSearch {
+	height: 25px;
+}
+#output {
+}
+.snippet {
+	font-size: 13px;
+}
+.clear {
+	clear: both;
+}
+a {
+	color: #185394;
+}
+</style>
+</head>
+<body>
+<div id="container">
+  <div id="hcContent" class="hcContentNoSidePanel">
+    <form action="test.html">
+      <input type="text" id="txtSearchTerm" />
+      <button id="btnSearch" style="display:none;">Start Search</button>
+    </form>
+    <noscript>
+    JavaScript is required for this page.
+    </noscript>
+    <div id="refinements">
+      <ul id="refinement-list">
+        <li><a href="more:catalog">Catalog</a></li>
+        <li><a href="more:leadership_development_catalog">Leadership Development Catalog</a></li>
+        <li><a href="more:articles">Articles</a></li>
+      </ul>
+    </div>
+    <div id="correctedQuery"></div>
+    <div id="searchResult" class="padded"></div>
+    <div class="clear"></div>
+    <div id="output"></div>
+    <div class="padded pagination"> <a href="#" id="prev" title="Display previous result page" style="display:none;">Previous</a> <span id="lblPageNumber" style="display:none;"></span> <a href="#" id="next" title="Display next result page" style="display:none;">Next</a> </div>
+  </div>
+  <script type="text/javascript">
+   /* var mGoogleApiKey = "AIzaSyCMGfdDaSfjqv5zYoS0mTJnOT3e9MURWkU"; */
+    var mGoogleApiKey = "AIzaSyDzOm6y60qBEKU1dkqg8U8oBW7vn5FBnBQ"; 
+    var mGoogleCustomSearchKey = "005976631982810751451:tmthppmgbz8";
+</script> 
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script> 
+  <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script> 
+  <script type="text/javascript" src="../scripts/app-main.js"></script> 
+  <script type="text/javascript" src="../scripts/jquery.ui.autocomplete.html.js"></script> 
+  <script type="text/javascript" src="../scripts/autocomplete.js"></script> 
+  <script type="text/javascript">
+$(window).load(function() {
+	$(".loader").fadeOut("slow");
+})
+</script> 
+</div>
+</body>
+</html>

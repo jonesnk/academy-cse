@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>JSON/Atom Custom Search API Example</title>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<style>
+html {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+}
+
+#container {
+width: 50%;
+margin: 0 auto;
+
+}
+
+#container ul { 
+margin: 0;
+padding: 10px 0 10px 0;
+list-style-type: none;
+background-color: #ccc;
+ }
+
+#container ul li { display: inline;
+padding: 1em;
+color: #fff;
+background-color: #036;
+font-weight: bold;}
+</style>
+</head>
+<body>
+
+
+<div id="container">
+	<h1 id="contextTitle"></h1>
+	<div id="totalResults"></div>
+	<div id="facets"><ul id="yourUl"></ul></div>
+	<div id="content"></div>
+</div>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+
+var q = "education";
+
+      function hndlr(response) {
+    	  
+        
+    	  
+    	document.getElementById("contextTitle").innerHTML = response.context.title;
+      for (var i = 0; i < response.items.length; i++) {
+        var item = response.items[i];
+        // in production code, item.htmlTitle should have the HTML entities escaped.
+        document.getElementById("content").innerHTML += "<br /><a target='_blank' href='"+item.link+"'>"+item.htmlTitle+"</a><br />"+item.htmlSnippet +"<hr />"; 
+      }
+      
+      document.getElementById("totalResults").innerHTML = "<h2>Total Number of Results: "+response.queries.request[0].totalResults+"</h2>";
+      
+//       document.getElementById("facets").innerHTML = "<ul>";
+
+//       for (var i = 0; i < response.context.facets.length; i++) {
+//           var item = response.context.facets[i][0].anchor;
+//           document.getElementById("facets").innerHTML += "<li>" +item+ "</li>";
+//         }
+      
+//       document.getElementById("facets").innerHTML += "</ul>";
+      var items = [];
+      $.each(response.context.facets, function(i, item) {    	  
+    	  if(item[0].anchor != 'Leadership Development Catalog'){
+    		  items.push('<li><a href="#">'+item[0].anchor+"</a></li>");
+    	  }
+      });  // close each()
+   $('#yourUl').append( items.join('') ); 
+}
+</script> 
+<script src="https://www.googleapis.com/customsearch/v1?key=AIzaSyCMGfdDaSfjqv5zYoS0mTJnOT3e9MURWkU&cx=005976631982810751451:tmthppmgbz8&q="+q+"&num=10&start=20&callback=hndlr">
+    </script>
+</body>
+</html>

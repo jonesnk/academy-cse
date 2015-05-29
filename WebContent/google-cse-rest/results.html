@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Results | Search</title>
+<style type="text/css">
+
+body {
+font-family: Arial, sans-serif;
+}
+a.cblog:before {
+	content: url(pix/blog.png);
+}
+a.ctravel:before {
+	content: url(pix/travel.png);
+}
+a.ctech:before {
+	content: url(pix/tech.png);
+}
+a.cmisc:before {
+	content: url(pix/misc.png);
+}
+.padded {
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+.output {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url('../img/loader1.gif') 50% 50% no-repeat rgb(249,249,249);
+}
+
+
+#searchResult {
+	float: left;
+	width: 100%;
+	color: #444;
+	font-weight: bold;
+	margin: 10px 0 20px 0;
+	display: none;
+}
+
+div.snippet {
+	float:left;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	padding-bottom: 10px;
+}
+#notFound {
+/* display:none; */
+}
+#correctedQuery {
+}
+#refinements {
+	margin: 12px 0 12px 0;
+	height: 29px;
+	/*   border-bottom: 1px solid #CCC; */
+	font-size: 12px;
+	font-weight: bold;
+	clear: both;
+	display: none;
+	width: 100%;
+}
+#refinements ul {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+#refinements ul li {
+	list-style: none;
+/* 	text-align: center; */
+/* 	width: 260px; */
+/* 	vertical-align: middle; */
+	background-color: #EFECDB;
+	float: left;
+    width: 33%;  
+    text-align:center;
+}
+#refinements ul li a {
+	text-decoration: none;
+	color: #6A6666;
+	padding: 10px;
+	display:block;
+}
+#txtSearchTerm {
+	height: 25px;
+	font-size: 22px;
+	padding: 5px;
+}
+#btnSearch {
+	height: 25px;
+}
+#output {
+}
+.snippet {
+	font-size: 13px;
+}
+.clear {
+	clear: both;
+}
+
+.active {
+    border-top: 1px solid #ff9900;
+    line-height:1.1em;
+    background-color: transparent !important;
+/*   background-color: #fff !important; */
+/*   margin: 0; */
+/*   padding: 0; */
+/* background-color: yellow !important; */
+}
+a {
+	color: #185394;
+}
+
+.link{
+	color:#4F9933;
+	font-size: 11px;
+	margin: 5px 0 5px 0;
+}
+
+.category{
+	color: #444;
+	font-size: 12px;
+	margin: 5px 0 10px 0;
+	font-weight: bold;
+}
+.result {
+	padding-bottom: 20px;
+	float:left;
+	width: 100%;
+}
+</style>
+
+<script>
+(function() {
+  var cx = '005976631982810751451:tmthppmgbz8'; // Insert your own Custom Search engine ID here
+  var gcse = document.createElement('script'); gcse.type = 'text/javascript';
+  gcse.async = true;
+  gcse.src = (document.location.protocol == 'https' ? 'https:' : 'http:') +
+      '//www.google.com/cse/cse.js?cx=' + cx;
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+</head>
+<body>
+<gcse:searchbox-only resultsUrl="results.html"></gcse:searchbox-only>
+
+    <div id="container">
+  <div id="hcContent" class="hcContentNoSidePanel">
+    <noscript>
+    JavaScript is required for this page.
+    </noscript>
+    <div id="correctedQuery"></div>
+    <div id="refinements">
+      <ul id="refinement-list">
+        <li><a href="more:catalog">Catalog</a></li>
+        <li><a href="more:leadership_development_catalog">Leadership Development Catalog</a></li>
+        <li><a href="more:articles">Articles</a></li>
+      </ul>
+    </div>
+    <div id="searchResult" class="padded"></div>
+    <div class="clear"></div>
+    <div id="output"></div>
+    <div class="padded pagination"> <a href="#" id="prev" title="Display previous result page" style="display:none;">Previous</a> <span id="lblPageNumber" style="display:none;"></span> <a href="#" id="next" title="Display next result page" style="display:none;">Next</a> </div>
+  </div>
+  <script type="text/javascript">
+    var mGoogleApiKey = "AIzaSyCMGfdDaSfjqv5zYoS0mTJnOT3e9MURWkU"; 
+    /*var mGoogleApiKey = "AIzaSyDzOm6y60qBEKU1dkqg8U8oBW7vn5FBnBQ"; */
+    var mGoogleCustomSearchKey = "005976631982810751451:tmthppmgbz8";
+</script> 
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script> 
+  <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script> 
+  <script>
+
+  var _prevIndex = 0;
+  var _nextIndex = 0;
+  var _resultsPerPage = 10;
+  var _pageNumber = 1;
+  var _href = "";
+  var notFound = "<div id='notFound'>No matching pages found</div>";
+
+  $(function (){	
+	
+  	$('#refinement-list li:first').addClass('active');
+  	
+  	var searchText = getUrlParameter('search-text');
+  	
+  //	var searchText = encodeURIComponent(searchText1).replace(/%20/g, "+").replace(/ /g, "+");
+  	
+  	_href = "more:catalog"; // default to catalog
+  	
+  	if (typeof searchText == 'undefined' || searchText.length === 0){
+  		 $("#searchResult").html(notFound);
+  		 setTimeout(function() {$('#searchResult').show();}, 2000); 
+   	} 	
+  	else {
+  		 Search(searchText,0,_href);
+  	}
+
+    
+    $(document).on("click", ".gsc-search-button gsc-search-button-v2", function(e){		
+    		 Search($("input.gsc-input").val(),0,_href);	
+    });
+ 
+      $(document).on("click", "#txtDidYouMean", function(e){
+      	$('#correctedQuery').hide();
+      	$('#notFound').hide();
+      	var $thisText = $(this).text();
+  		{ Search($thisText,0,_href);}
+  		$("input.gsc-input").val($thisText);
+  		$('#refinements').hide();	
+  	    e.preventDefault();
+  	 });
+
+      $("#refinements").on("click", "#refinement-list li a", function(e){
+      	$('#refinement-list li').removeClass('active');
+          var $parent = $(this).parent();
+          if (!$parent.hasClass('active')) {
+              $parent.addClass('active');
+          }
+  		_href = $(this).attr("href");
+  		
+  		Search($("input.gsc-input").val(),0,_href);
+  	    e.preventDefault();
+  	 });
+      $('#prev').click(function () { Search($("input.gsc-input").val(),-1,_href); });
+      $('#next').click(function () { Search($("input.gsc-input").val(),1,_href);  });
+//      $(document).on('submit','form', function(){
+//      	{Search($("#txtSearchTerm").val(),0,_href);}
+//      });
+  });
+  
+  function getUrlParameter(sParam)
+  {
+      var sPageURL = window.location.search.substring(1);
+      var sURLVariables = sPageURL.split('&');
+      for (var i = 0; i < sURLVariables.length; i++) 
+      {
+          var sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] == sParam) 
+          {
+              return sParameterName[1];
+          }
+      }
+  }  
+
+  function Search(term, direction, facet)
+  {
+  	
+      var startIndex = 1;
+
+      if (direction === -1)
+      {
+          startIndex = _prevIndex; 
+          _pageNumber--;
+      }
+      if (direction === 1)
+      {
+          startIndex = _nextIndex; 
+          _pageNumber++;
+      }
+      if (direction === 0)
+      {
+          startIndex = 1; 
+          _pageNumber = 1;
+      }
+
+      var url = "https://www.googleapis.com/customsearch/v1?key="
+      + mGoogleApiKey + "&num=10&cx=" + mGoogleCustomSearchKey + "&start=" + startIndex + "&q=" + term + "+" + facet +"&callback=?";
+
+      $.getJSON(url, '', SearchCompleted);
+  }
+
+  function SearchCompleted(response)
+  {
+      var html = "";
+      $("#searchResult").html("");
+      $("#output").html("");
+      
+//      $('#refinement-list').empty(); 
+      $("#output, .pagination").show();
+
+      if (response.items == null)
+      {
+      	 if (response["spelling"]){
+      		 var tspelling= response.spelling.correctedQuery;
+      		 
+      		// var str = '#this #is__ __#a test###__';
+      		 console.log(tspelling.replace(/ more:catalog/g, " ").replace(/ more:articles/g, " ").replace(/ more:leadership_development_catalog/g, " "));
+      			 
+      			 
+      		 var cspelling= tspelling.replace(" more:catalog", "").replace(" more:articles", "").replace(" more:leadership_development_catalog", "");
+      		$('#refinements').hide();
+      		$('#correctedQuery').show();
+      		$('#correctedQuery').html("<em>Did you mean</em>: "+"<a href='#' id='txtDidYouMean'>"+ escape(cspelling) +"</a><em>?</em>"); 
+      	}
+      	
+          $("#output, .pagination").hide();
+      	$("#searchResult").html(notFound);
+      	$('#searchResult').show();
+          return;
+      }
+
+      if (response.items.length === 0)
+      {
+         
+          $("#output, .pagination").hide();
+          $('#refinements').show();
+          $("#searchResult").html(notFound);
+          $('#searchResult').show();
+
+          return;
+      }
+
+      $("#searchResult").html("About "+ response.queries.request[0].totalResults +" results ("+response.searchInformation.formattedSearchTime+" seconds)");
+
+      if (response.queries.nextPage != null)
+      {
+          _nextIndex = response.queries.nextPage[0].startIndex;
+          $("#next").show();
+      }
+      else
+      {
+          $("#next").hide();
+      }
+
+      if (response.queries.previousPage != null)
+      {
+          _prevIndex = response.queries.previousPage[0].startIndex;
+          $("#prev").show();
+      }
+      else
+      {
+          $("#prev").hide();
+      }
+
+      if (response.queries.request[0].totalResults > _resultsPerPage)
+      {
+          $("#lblPageNumber").show().html(_pageNumber);
+      }
+      else
+      {
+          $("#lblPageNumber").hide();
+      }
+      
+     /* var refinements = [];
+      $.each(response.context.refinements, function(i, item) {    	  
+    	  if(item[0].anchor != 'Leadership Development Catalog'){
+      	refinements.push('<li><a href="'+item[0].label_with_op+'">'+item[0].anchor+"</a></li>");
+    	  }
+      });
+      
+      refinements.sort();
+      
+      $('#refinement-list').append( refinements.join('') );*/
+
+      html += "<hr />";
+      
+      for (var i = 0; i < response.items.length; i++)
+      {
+          var item = response.items[i];
+          var title = item.htmlTitle;
+          var snippet = item.htmlSnippet;      
+          var csnippet = snippet.replace("<br>", "");       
+          var icon = icon = "class='cmisc' title='Other page'";
+
+          title = title.replace("- Peter Hahndorf", "");
+          title = title.replace("- Forever Breathes The Lonely Word", "");
+          title = title.replace("Forever Breathes The Lonely Word - ", "");
+          title = title.replace(" - Browse", "");
+
+          if (item.link.indexOf("/tech/") > -1)
+          {
+              icon = "class='ctech' title='Tech Stuff'";
+          }
+
+          if (item.link.indexOf("/trip/") > -1)
+          {
+              icon = "class='ctravel' title='Travel'";
+          }
+
+          if (item.link.indexOf("/blog/") > -1)
+          {
+              icon = "class='cblog' title='Technical blog'";
+          }
+          
+          //var pagemap = typeof(item.pagemap) != "undefined" ? "<div class='img'><img src="+item.pagemap.cse_thumbnail[0].src+" width="+item.pagemap.cse_thumbnail[0].width+" height="+item.pagemap.cse_thumbnail[0].height+" /></div>" : "hello";
+          // var pagemap = item.hasOwnProperty('pagemap');
+          
+          html += "<div class='result'>";
+          html += "<div class='hcHead2'><a target='_blank' title='"+title+"' href='" + item.link + "'> " + title + "</a></div>";
+          html += "<div class='link'>"+item.link+ "</div>";       	
+       
+          if (item["pagemap"] && item["pagemap"].cse_thumbnail){
+          	html += "<div style='float:left;width:100%'><div class='img' style='width:10%;float:left;'><img src="+item.pagemap.cse_thumbnail[0].src+" width='70' /></div>";
+          	html += "<div class='snippet' style='width:90%;float:right;'>"+csnippet+ "</div>";
+          	html += "</div>";
+          //html += "<div class='img'><img src="+item.pagemap.cse_thumbnail[0].src+" width="+item.pagemap.cse_thumbnail[0].width+" height="+item.pagemap.cse_thumbnail[0].height+" />";
+          }
+          
+          else {
+          	html += "<div class='snippet'>"+csnippet+ "</div>";
+          }
+         
+          
+//           html += "</div>";
+          
+         if (item["labels"]){
+             html += "<div class='category'>Category: "+item.labels[0].displayName+"</div>";
+          }
+          html += "</div>";
+      }
+     
+  	$('#refinements').show();
+      $("#output").html(html);
+      $('#searchResult').show();
+  }
+
+  </script> 
+  <script type="text/javascript">
+$(window).load(function() {
+	$(".loader").fadeOut("slow");
+})
+</script> 
+</div>
+</body>
+</html>
